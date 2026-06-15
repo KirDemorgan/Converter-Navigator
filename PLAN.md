@@ -1,3 +1,5 @@
+## Plan made by AI xd
+
 # Converter Navigator — план разработки плагина
 
 Плагин для JetBrains IDE: поиск, подсветка и навигация по классам-конвертерам

@@ -8,12 +8,13 @@ data class ConverterRow(
     val owner: String?,
     val fromType: String,
     val toType: String,
-    val kind: RuleKind,
+    val kinds: List<RuleKind>,
     val target: PsiElement,
 ) {
     val searchText: String = buildString {
         append(name)
         owner?.let { append(' ').append(it) }
         append(' ').append(fromType).append(' ').append(toType)
+        kinds.forEach { append(' ').append(it.name) }
     }.lowercase()
 }

@@ -1,10 +1,13 @@
 package xyz.demorgan.toolwindow
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.pom.Navigatable
@@ -14,6 +17,7 @@ import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.SearchTextField
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
+import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.BorderLayout
@@ -26,7 +30,10 @@ import javax.swing.JPanel
 import javax.swing.ListSelectionModel
 import javax.swing.event.DocumentEvent
 
-class ConverterToolWindowPanel(private val project: Project) : SimpleToolWindowPanel(true, true) {
+class ConverterToolWindowPanel(
+    private val project: Project,
+    private val parentDisposable: Disposable,
+) : SimpleToolWindowPanel(true, true) {
 
     private val model = DefaultListModel<ConverterRow>()
     private val list = JBList(model)
@@ -37,7 +44,7 @@ class ConverterToolWindowPanel(private val project: Project) : SimpleToolWindowP
     init {
         list.selectionMode = ListSelectionModel.SINGLE_SELECTION
         list.cellRenderer = ConverterCellRenderer()
-        list.emptyText.text = "No converters found"
+        list.emptyText.text = "Loading converters…"
 
         object : DoubleClickListener() {
             override fun onDoubleClick(event: MouseEvent): Boolean {
@@ -80,8 +87,15 @@ class ConverterToolWindowPanel(private val project: Project) : SimpleToolWindowP
     }
 
     fun refresh() {
-        allRows = ConverterRows.build(project)
-        applyFilter()
+        ReadAction.nonBlocking<List<ConverterRow>> { ConverterRows.build(project) }
+            .inSmartMode(project)
+            .expireWith(parentDisposable)
+            .finishOnUiThread(ModalityState.any()) { rows ->
+                allRows = rows
+                list.emptyText.text = "No converters found"
+                applyFilter()
+            }
+            .submit(AppExecutorUtil.getAppExecutorService())
     }
 
     private fun applyFilter() {

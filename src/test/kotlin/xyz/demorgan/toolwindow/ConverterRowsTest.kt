@@ -5,11 +5,15 @@ import xyz.demorgan.detector.RuleKind
 
 class ConverterRowsTest : LightJavaCodeInsightFixtureTestCase() {
 
-    private fun addConverters() {
+    private fun addSpringStub() {
         myFixture.addClass(
             "package org.springframework.core.convert.converter; " +
                 "public interface Converter<S, T> { T convert(S source); }",
         )
+    }
+
+    private fun addConverters() {
+        addSpringStub()
         myFixture.addClass("package org.mapstruct; public @interface Mapper {}")
         myFixture.addClass("package model; public class Order {}")
         myFixture.addClass("package model; public class OrderDto {}")
@@ -30,27 +34,42 @@ class ConverterRowsTest : LightJavaCodeInsightFixtureTestCase() {
         addConverters()
         val rows = ConverterRows.build(project)
 
-        val mapper = rows.single { it.kind == RuleKind.ANNOTATION }
+        val mapper = rows.single { it.kinds == listOf(RuleKind.ANNOTATION) }
         assertEquals("toDto", mapper.name)
         assertEquals("OrderMapper", mapper.owner)
         assertEquals("Order", mapper.fromType)
         assertEquals("OrderDto", mapper.toType)
 
-        val spring = rows.single { it.kind == RuleKind.INTERFACE }
+        val spring = rows.single { it.kinds == listOf(RuleKind.INTERFACE) }
         assertEquals("OrderSpringConverter", spring.name)
         assertNull(spring.owner)
     }
 
     fun testRowsSortedByKindThenName() {
         addConverters()
-        val kinds = ConverterRows.build(project).map { it.kind }
+        val kinds = ConverterRows.build(project).map { it.kinds.single() }
         assertEquals(listOf(RuleKind.NAME, RuleKind.INTERFACE, RuleKind.ANNOTATION), kinds)
+    }
+
+    fun testNameAndInterfaceCollapseToSingleRow() {
+        addSpringStub()
+        myFixture.addClass("package model; public class Foo {}")
+        myFixture.addClass("package model; public class Bar {}")
+        myFixture.addClass(
+            "package c; import org.springframework.core.convert.converter.Converter; " +
+                "import model.Foo; import model.Bar; " +
+                "public class FooToBarConverter implements Converter<Foo, Bar> { " +
+                "public Bar convert(Foo s) { return null; } }",
+        )
+
+        val rows = ConverterRows.build(project)
+        assertEquals(1, rows.size)
+        assertEquals(listOf(RuleKind.NAME, RuleKind.INTERFACE), rows.single().kinds)
     }
 
     fun testFilterByTypeName() {
         addConverters()
-        val rows = ConverterRows.build(project)
-        val filtered = ConverterRowFilter.filter(rows, "userdto")
+        val filtered = ConverterRowFilter.filter(ConverterRows.build(project), "userdto")
         assertEquals(1, filtered.size)
         assertEquals("UserToUserDtoConverter", filtered.single().name)
     }

@@ -8,6 +8,7 @@ import com.intellij.util.ui.JBUI
 import xyz.demorgan.ConverterIcons
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.FlowLayout
 import java.awt.GridBagLayout
 import javax.swing.JList
 import javax.swing.JPanel
@@ -18,7 +19,7 @@ class ConverterCellRenderer : ListCellRenderer<ConverterRow> {
     private val iconLabel = JBLabel(ConverterIcons.CONVERTER)
     private val nameLine = SimpleColoredComponent()
     private val subtitleLine = SimpleColoredComponent()
-    private val badge = KindBadge()
+    private val badgeRow = JPanel(FlowLayout(FlowLayout.RIGHT, JBUI.scale(4), 0))
     private val root = JPanel(BorderLayout(JBUI.scale(8), 0))
 
     init {
@@ -27,6 +28,7 @@ class ConverterCellRenderer : ListCellRenderer<ConverterRow> {
         nameLine.ipad = JBUI.emptyInsets()
         subtitleLine.ipad = JBUI.emptyInsets()
         iconLabel.isOpaque = false
+        badgeRow.isOpaque = false
 
         val text = JPanel(VerticalLayout(JBUI.scale(1)))
         text.isOpaque = false
@@ -35,7 +37,7 @@ class ConverterCellRenderer : ListCellRenderer<ConverterRow> {
 
         val badgeHolder = JPanel(GridBagLayout())
         badgeHolder.isOpaque = false
-        badgeHolder.add(badge)
+        badgeHolder.add(badgeRow)
 
         root.border = JBUI.Borders.empty(4, 8)
         root.add(iconLabel, BorderLayout.WEST)
@@ -61,7 +63,11 @@ class ConverterCellRenderer : ListCellRenderer<ConverterRow> {
         subtitleLine.clear()
         subtitleLine.append("${value.fromType}  →  ${value.toType}", dimmedAttributes(isSelected, list))
 
-        badge.setKind(value.kind)
+        badgeRow.removeAll()
+        value.kinds.forEach { kind ->
+            badgeRow.add(KindBadge().apply { setKind(kind) })
+        }
+
         return root
     }
 

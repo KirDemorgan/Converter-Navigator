@@ -4,6 +4,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.search.searches.AnnotatedElementsSearch
@@ -27,6 +28,8 @@ class ConverterSearch(private val project: Project) {
                 PsiModificationTracker.MODIFICATION_COUNT,
             )
         }
+
+    fun converterTargets(): List<PsiElement> = allConversions().map { it.target }.distinct()
 
     fun conversionsForType(type: PsiClass): List<DetectedConversion> {
         val fqn = type.qualifiedName

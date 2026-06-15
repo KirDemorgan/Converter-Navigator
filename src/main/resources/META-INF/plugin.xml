@@ -19,5 +19,7 @@
         <codeInsight.lineMarkerProvider
             language="JAVA"
             implementationClass="xyz.demorgan.markers.ConverterLineMarkerProvider"/>
+        <gotoSymbolContributor
+            implementation="xyz.demorgan.search.ConverterSymbolContributor"/>
     </extensions>
 </idea-plugin>

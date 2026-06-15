@@ -94,12 +94,18 @@ E:\ConverterNavigator\
   для каждого подходящего метода `Target m(Source s)` достаём пару From/To. Цель = метод.
 Модель `Conversion(target: PsiElement, fromType: String, toType: String, source: RuleKind)`.
 
-### 6.2 ConverterIndex (производительность, двунаправленный)
-`FileBasedIndex<String, List<ConversionRef>>`: ключ — FQN типа. Каждую конверсию
-индексируем по ОБОИМ концам (и From, и To), чтобы навигация работала в обе стороны.
-Значение указывает на цель (класс или метод) — FQN класса + опц. сигнатура метода.
-Инкрементально пересобирается платформой. Lookup «конверсии для типа X» = O(1),
-без обхода проекта. Источник данных — тот же ConverterDetector на уровне PSI файла.
+### 6.2 ConverterSearch (производительность, двунаправленный)
+ВАЖНО: отказались от своего `FileBasedIndex` — индексер не имеет права делать resolve
+(dumb-режим), а детектору resolve нужен (дженерики/аннотации/супертипы). Вместо этого
+переиспользуем штатные индексы платформы для сбора КАНДИДАТОВ, затем прогоняем по ним
+ConverterDetector (уже в smart-режиме, resolve разрешён):
+- по имени → `PsiShortNamesCache.getAllClassNames` + `getClassesByName`;
+- по интерфейсу → `ClassInheritorsSearch` по найденному интерфейсу;
+- по аннотации → `AnnotatedElementsSearch.searchPsiClasses`.
+Project service, результат кэшируется `CachedValuesManager` на `PsiModificationTracker`.
+Двунаправленность: матч по типу идёт и по fromType, и по toType (для NAME — по simple
+name, для INTERFACE/ANNOTATION — по FQN). Та же производительность (только кандидаты),
+но без анти-паттерна resolve-в-индексе и втрое меньше кода.
 
 ### 6.3 ConverterLineMarkerProvider
 `RelatedItemLineMarkerProvider`, зарегистрирован на UAST (Java+Kotlin).

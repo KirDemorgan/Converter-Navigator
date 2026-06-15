@@ -13,7 +13,11 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
+    <depends optional="true" config-file="converter-navigator-kotlin.xml">org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider
+            language="JAVA"
+            implementationClass="xyz.demorgan.markers.ConverterLineMarkerProvider"/>
     </extensions>
 </idea-plugin>

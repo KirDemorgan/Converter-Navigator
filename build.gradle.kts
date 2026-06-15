@@ -1,9 +1,10 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.0.21"
+    id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.intellij.platform") version "2.1.0"
 }
 
@@ -34,14 +35,13 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "233"
+            sinceBuild = "222"
             untilBuild = provider { null }
         }
     }
     pluginVerification {
         ides {
-            ide("IC", "2023.3")
-            ide("IC", "2024.1")
+            ide("IC", "2022.2")
         }
     }
 }
@@ -54,6 +54,8 @@ java {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        apiVersion.set(KotlinVersion.KOTLIN_1_7)
+        languageVersion.set(KotlinVersion.KOTLIN_1_7)
     }
 }
 

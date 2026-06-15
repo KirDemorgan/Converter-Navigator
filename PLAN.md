@@ -119,8 +119,9 @@ ToolWindow со списком/деревом всех конвертеров п
 ### 6.6 Settings
 `PersistentStateComponent`: regex-правила имени + список FQN интерфейсов.
 UI-страница в Settings | Tools | Converter Navigator.
-Дефолты: имя `^(\w+)To(\w+)(Converter|Mapper)$`, интерфейсы — пусто (заполняет команда),
-аннотации — `org.mapstruct.Mapper` (включено по умолчанию).
+Дефолты: имя `^(\w+)To(\w+)(Converter|Mapper)$`,
+интерфейс — `org.springframework.core.convert.converter.Converter` (S=from слева,
+T=to справа; `T convert(S)`), аннотация — `org.mapstruct.Mapper`. Всё включено.
 
 ## 7. Критерии проверки (как поймём, что готово)
 

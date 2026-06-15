@@ -1,3 +1,5 @@
+[![JetBrains Plugin](https://img.shields.io/badge/JetBrains-Marketplace-blue.svg?style=for-the-badge&logo=jetbrains)](https://plugins.jetbrains.com/plugin/32302)
+[![Версия плагина](https://img.shields.io/badge/version-0.1.0-brightgreen.svg?style=for-the-badge&logo=jetbrains)](https://plugins.jetbrains.com/plugin/32302)
 # Converter Navigator
 
 IntelliJ-плагин для навигации по классам-конвертерам и мапперам в Java и Kotlin.

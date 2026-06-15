@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>xyz.demorgan.converter-navigator</id>
     <name>Converter Navigator</name>
-    <vendor>demorgan</vendor>
+    <vendor>Kir Demorgan</vendor>
 
     <description><![CDATA[
         Navigation, gutter markers and search for converter/mapper classes
@@ -25,6 +25,7 @@
             id="Converters"
             anchor="right"
             secondary="true"
+            icon="/icons/toolwindow.svg"
             factoryClass="xyz.demorgan.toolwindow.ConverterToolWindowFactory"/>
         <applicationConfigurable
             parentId="tools"

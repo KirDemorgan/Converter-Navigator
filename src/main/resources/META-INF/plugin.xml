@@ -26,5 +26,12 @@
             anchor="right"
             secondary="true"
             factoryClass="xyz.demorgan.toolwindow.ConverterToolWindowFactory"/>
+        <applicationConfigurable
+            parentId="tools"
+            id="xyz.demorgan.settings.ConverterConfigurable"
+            instance="xyz.demorgan.settings.ConverterConfigurable"
+            displayName="Converter Navigator"/>
+        <applicationService
+            serviceImplementation="xyz.demorgan.settings.ConverterSettings"/>
     </extensions>
 </idea-plugin>

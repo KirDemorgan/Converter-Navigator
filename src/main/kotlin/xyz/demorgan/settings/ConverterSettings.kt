@@ -31,6 +31,18 @@ class ConverterSettings : PersistentStateComponent<ConverterSettings.State> {
     val annotationFqns: List<String> get() = state.annotationFqns
     val interfaceSourceFirst: Boolean get() = state.interfaceSourceFirst
 
+    fun replaceAll(
+        namePatterns: List<String>,
+        interfaceFqns: List<String>,
+        annotationFqns: List<String>,
+        interfaceSourceFirst: Boolean,
+    ) {
+        state.namePatterns = namePatterns.toMutableList()
+        state.interfaceFqns = interfaceFqns.toMutableList()
+        state.annotationFqns = annotationFqns.toMutableList()
+        state.interfaceSourceFirst = interfaceSourceFirst
+    }
+
     companion object {
         const val DEFAULT_NAME_PATTERN = "^(\\w+)To(\\w+)(Converter|Mapper)$"
         const val DEFAULT_INTERFACE = "org.springframework.core.convert.converter.Converter"

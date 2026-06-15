@@ -48,6 +48,21 @@ class ConverterDetectorTest : LightJavaCodeInsightFixtureTestCase() {
         assertEquals("model.Bar", conversion.toType)
     }
 
+    fun testMapstructIgnoresVoidAndMultiArgMethods() {
+        addStubs()
+        val cls = myFixture.addClass(
+            "package c; import org.mapstruct.Mapper; import model.Foo; import model.Bar; " +
+                "@Mapper public interface FooMapper { " +
+                "Bar toBar(Foo f); " +
+                "void fill(Foo f, Bar b); " +
+                "void clear(); }",
+        )
+        val conversions = ConverterDetector().detect(cls).filter { it.kind == RuleKind.ANNOTATION }
+        assertEquals(1, conversions.size)
+        assertEquals("model.Foo", conversions.single().fromType)
+        assertEquals("model.Bar", conversions.single().toType)
+    }
+
     fun testPlainClassIsNotConverter() {
         addStubs()
         val cls = myFixture.addClass("package c; public class JustAService { void run() {} }")

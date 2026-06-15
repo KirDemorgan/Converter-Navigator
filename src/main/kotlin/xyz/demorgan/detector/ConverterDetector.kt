@@ -58,7 +58,7 @@ class ConverterDetector(private val settings: ConverterSettings = ConverterSetti
         if (method.isConstructor) return null
         if (method.hasModifierProperty(PsiModifier.STATIC)) return null
         val returnType = method.returnType ?: return null
-        if (PsiType.VOID == returnType) return null
+        if (returnType.canonicalText == "void") return null
         val params = method.parameterList.parameters
         if (params.size != 1) return null
         val from = typeFqn(params[0].type) ?: return null

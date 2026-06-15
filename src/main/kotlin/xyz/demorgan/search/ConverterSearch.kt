@@ -11,11 +11,11 @@ import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
+import xyz.demorgan.detector.ConversionMatching
 import xyz.demorgan.detector.ConverterDetector
 import xyz.demorgan.detector.DetectedConversion
-import xyz.demorgan.detector.RuleKind
+import xyz.demorgan.detector.NameRule
 import xyz.demorgan.settings.ConverterSettings
-import java.util.regex.Pattern
 
 @Service(Service.Level.PROJECT)
 class ConverterSearch(private val project: Project) {
@@ -31,12 +31,7 @@ class ConverterSearch(private val project: Project) {
     fun conversionsForType(type: PsiClass): List<DetectedConversion> {
         val fqn = type.qualifiedName
         val simple = type.name
-        return allConversions().filter { c ->
-            when (c.kind) {
-                RuleKind.NAME -> c.fromType == simple || c.toType == simple
-                else -> fqn != null && (c.fromType == fqn || c.toType == fqn)
-            }
-        }
+        return allConversions().filter { ConversionMatching.matchesType(it.asConversion(), fqn, simple) }
     }
 
     private fun computeAll(): List<DetectedConversion> {
@@ -61,11 +56,11 @@ class ConverterSearch(private val project: Project) {
         scope: GlobalSearchScope,
         out: MutableSet<PsiClass>,
     ) {
-        val patterns = settings.namePatterns.mapNotNull { runCatching { Pattern.compile(it) }.getOrNull() }
-        if (patterns.isEmpty()) return
+        if (settings.namePatterns.isEmpty()) return
+        val nameRule = NameRule(settings.namePatterns)
         val cache = PsiShortNamesCache.getInstance(project)
         for (name in cache.allClassNames) {
-            if (patterns.none { it.matcher(name).matches() }) continue
+            if (!nameRule.matches(name)) continue
             out.addAll(cache.getClassesByName(name, scope))
         }
     }

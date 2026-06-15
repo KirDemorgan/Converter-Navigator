@@ -24,6 +24,7 @@ dependencies {
         bundledPlugin("com.intellij.java")
         bundledPlugin("org.jetbrains.kotlin")
         testFramework(TestFrameworkType.Platform)
+        testFramework(TestFrameworkType.Plugin.Java)
         instrumentationTools()
     }
     testImplementation("junit:junit:4.13.2")

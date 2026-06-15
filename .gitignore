@@ -1,0 +1,10 @@
+tmp/
+notes/
+*.draft.md
+
+.gradle/
+build/
+out/
+.idea/
+*.iml
+.kotlin/

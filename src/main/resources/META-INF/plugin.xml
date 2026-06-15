@@ -1,0 +1,19 @@
+<idea-plugin>
+    <id>xyz.demorgan.converter-navigator</id>
+    <name>Converter Navigator</name>
+    <vendor>demorgan</vendor>
+
+    <description><![CDATA[
+        Navigation, gutter markers and search for converter/mapper classes
+        in Java and Kotlin projects. Detects converters by class name pattern,
+        by implemented interface (e.g. Converter&lt;S, T&gt;) and by annotation
+        (e.g. MapStruct @Mapper). Lets you jump from a DTO/entity straight to
+        every converter that produces or consumes it.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+</idea-plugin>

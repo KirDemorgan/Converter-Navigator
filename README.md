@@ -40,7 +40,8 @@ IDE → Settings | Plugins | ⚙ | Install Plugin from Disk… → выбрат�
 ```bash
 ./gradlew test        # юнит- и фикстурные тесты
 ./gradlew runIde      # запустить sandbox-IDE с плагином
-./gradlew verifyPlugin # проверка совместимости (IC 2023.3, 2024.1)
+./gradlew verifyPlugin # проверка совместимости (IC 2022.2)
 ```
 
-Требования: JDK 17+. Целевая платформа — IntelliJ IDEA 2023.3+ (Community/Ultimate).
+Требования: JDK 17+. Целевая платформа — IntelliJ IDEA **2022.2+** (Community/Ultimate).
+Код плагина ограничен Kotlin 1.7 API ради совместимости со встроенным в 2022.2 Kotlin.

@@ -26,6 +26,7 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
         testFramework(TestFrameworkType.Plugin.Java)
         instrumentationTools()
+        pluginVerifier()
     }
     testImplementation("junit:junit:4.13.2")
 }
@@ -35,6 +36,12 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = "233"
             untilBuild = provider { null }
+        }
+    }
+    pluginVerification {
+        ides {
+            ide("IC", "2023.3")
+            ide("IC", "2024.1")
         }
     }
 }

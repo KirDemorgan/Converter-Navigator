@@ -131,17 +131,16 @@ T=to справа; `T convert(S)`), аннотация — `org.mapstruct.Mapper
 
 ## 7. Критерии проверки (как поймём, что готово)
 
-- [ ] Плагин собирается: `./gradlew buildPlugin` без ошибок.
-- [ ] `./gradlew runIde` поднимает sandbox-IDE с плагином.
-- [ ] На тестовом проекте (Java + Kotlin) класс `FooToBarConverter` помечен иконкой.
-- [ ] Класс, реализующий настроенный интерфейс, тоже помечен.
-- [ ] MapStruct-маппер (`@Mapper`) помечен; пары берутся из методов.
-- [ ] На классе `Foo` gutter ведёт к `FooToBarConverter` (в обе стороны: и на `Foo`, и на `Bar`).
-- [ ] Когда для пары есть и ручной конвертер, и mapstruct — gutter показывает popup с обоими.
-- [ ] Конвертер находится в Search Everywhere.
-- [ ] ToolWindow показывает полный список конвертеров.
-- [ ] Settings: смена regex/интерфейсов меняет поведение без перекомпиляции.
-- [ ] На большом проекте нет фризов (индекс, не обход).
+- [x] Плагин собирается: `./gradlew buildPlugin` без ошибок.
+- [x] Детектор по имени — тест `ConverterDetectorTest` (light-фикстура).
+- [x] Класс, реализующий интерфейс (spring `Converter`) — тест.
+- [x] MapStruct-маппер (`@Mapper`), пары из методов — тест.
+- [x] gutter «это конвертер» и «конвертеры этого типа» — `ConverterLineMarkerProviderTest`.
+- [x] Конвертер находится в Search Everywhere — `ConverterSymbolContributorTest`.
+- [x] ToolWindow строит список — `ConverterRowsTest`.
+- [x] Settings: apply/reset/isModified — `ConverterConfigurableTest`.
+- [ ] Ручная проверка в живой IDE (`./gradlew runIde`): обе стороны навигации,
+      popup при нескольких целях (ручной + mapstruct), отсутствие фризов на большом проекте.
 
 ## 8. Порядок реализации
 

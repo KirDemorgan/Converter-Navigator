@@ -21,5 +21,10 @@
             implementationClass="xyz.demorgan.markers.ConverterLineMarkerProvider"/>
         <gotoSymbolContributor
             implementation="xyz.demorgan.search.ConverterSymbolContributor"/>
+        <toolWindow
+            id="Converters"
+            anchor="right"
+            secondary="true"
+            factoryClass="xyz.demorgan.toolwindow.ConverterToolWindowFactory"/>
     </extensions>
 </idea-plugin>
